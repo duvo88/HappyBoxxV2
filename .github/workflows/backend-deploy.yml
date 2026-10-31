@@ -226,19 +226,19 @@ jobs:
       - name: Apply identity migrations
         env:
           AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
-        run: dotnet ef database update --project src/Services/Identity/HappyBoxx.Identity.Api/HappyBoxx.Identity.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
+        run: dotnet-ef database update --project src/Services/Identity/HappyBoxx.Identity.Api/HappyBoxx.Identity.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
 
       - name: Apply catalog migrations
         env:
           AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
-        run: dotnet ef database update --project src/Services/Catalog/HappyBoxx.Catalog.Api/HappyBoxx.Catalog.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
+        run: dotnet-ef database update --project src/Services/Catalog/HappyBoxx.Catalog.Api/HappyBoxx.Catalog.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
 
       - name: Apply inventory migrations
         env:
           AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
-        run: dotnet ef database update --project src/Services/Inventory/HappyBoxx.Inventory.Api/HappyBoxx.Inventory.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
+        run: dotnet-ef database update --project src/Services/Inventory/HappyBoxx.Inventory.Api/HappyBoxx.Inventory.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
 
       - name: Apply billing migrations
         env:
           AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
-        run: dotnet ef database update --project src/Services/Billing/HappyBoxx.Billing.Api/HappyBoxx.Billing.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
+        run: dotnet-ef database update --project src/Services/Billing/HappyBoxx.Billing.Api/HappyBoxx.Billing.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
