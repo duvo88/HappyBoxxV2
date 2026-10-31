@@ -9,6 +9,7 @@ It builds and deploys the 5 backend apps in this order:
 1. Identity API
 2. Catalog API, Inventory API, Billing API (in parallel)
 3. Gateway
+4. EF migrations (Identity, Catalog, Inventory, Billing)
 
 ## 1) Configure GitHub Actions OIDC authentication
 
@@ -27,6 +28,13 @@ In GitHub repo settings, add:
 - `AZURE_CLIENT_ID`
 - `AZURE_TENANT_ID`
 - `AZURE_SUBSCRIPTION_ID`
+- `AZURE_SQL_CONNECTION_STRING`
+
+`AZURE_SQL_CONNECTION_STRING` is used by the migration job and should point to the shared Azure SQL database.
+
+Example:
+
+`Server=tcp:<sql-server>.database.windows.net,1433;Initial Catalog=HappyBoxx;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Service Principal;User ID=<client-id>;Password=<client-secret>;`
 
 ## 3) Add GitHub repository variables
 
@@ -55,8 +63,7 @@ Choose either:
 
 ## 6) Post-deploy
 
-After backend deployment succeeds:
+After backend deployment succeeds and migration job passes:
 
-1. Run EF migrations against Azure SQL for all services.
-2. Validate health/startup logs for each app.
-3. Verify gateway routes and auth flow end-to-end.
+1. Validate health/startup logs for each app.
+2. Verify gateway routes and auth flow end-to-end.
