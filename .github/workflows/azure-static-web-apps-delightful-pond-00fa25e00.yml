@@ -34,28 +34,31 @@ jobs:
           result-encoding: string
       - name: Generate .env file for Vite
         run: |
-          echo "VITE_API_BASE_URL=${{ vars.VITE_API_BASE_URL }}" >> ./src/Web/admin-portal/.env
-          echo "VITE_AUTH_MODE=${{ vars.VITE_AUTH_MODE }}" >> ./src/Web/admin-portal/.env
-          echo "VITE_ENTRA_CLIENT_ID=${{ vars.VITE_ENTRA_CLIENT_ID }}" >> ./src/Web/admin-portal/.env
-          echo "VITE_ENTRA_TENANT_ID=${{ vars.VITE_ENTRA_TENANT_ID }}" >> ./src/Web/admin-portal/.env
-          echo "VITE_ENTRA_AUTHORITY=${{ vars.VITE_ENTRA_AUTHORITY }}" >> ./src/Web/admin-portal/.env
-          echo "VITE_ENTRA_API_SCOPE=${{ vars.VITE_ENTRA_API_SCOPE }}" >> ./src/Web/admin-portal/.env
-          echo "VITE_ENTRA_REDIRECT_URI=${{ vars.VITE_ENTRA_REDIRECT_URI }}" >> ./src/Web/admin-portal/.env
+          rm -f ./src/Web/admin-portal/.env.production
+          cat > ./src/Web/admin-portal/.env.production <<EOF
+          VITE_API_BASE_URL=${{ vars.VITE_API_BASE_URL }}
+          VITE_AUTH_MODE=${{ vars.VITE_AUTH_MODE }}
+          VITE_ENTRA_CLIENT_ID=${{ vars.VITE_ENTRA_CLIENT_ID }}
+          VITE_ENTRA_TENANT_ID=${{ vars.VITE_ENTRA_TENANT_ID }}
+          VITE_ENTRA_AUTHORITY=${{ vars.VITE_ENTRA_AUTHORITY }}
+          VITE_ENTRA_API_SCOPE=${{ vars.VITE_ENTRA_API_SCOPE }}
+          VITE_ENTRA_REDIRECT_URI=${{ vars.VITE_ENTRA_REDIRECT_URI }}
+          EOF
       - name: Debug Vite env values
         run: |
-          echo "=== .env used for Vite build ==="
-          cat ./src/Web/admin-portal/.env
+          echo "=== .env.production used for Vite build ==="
+          cat ./src/Web/admin-portal/.env.production
       - name: Validate Vite env file
         run: |
-          test -s src/Web/admin-portal/.env
+          test -s src/Web/admin-portal/.env.production
           while IFS='=' read -r key value; do
             [ -z "$key" ] && continue
             if [ -z "$value" ]; then
-              echo "Missing value for $key in .env"
+              echo "Missing value for $key in .env.production"
               exit 1
             fi
-          done < src/Web/admin-portal/.env
-          grep '^VITE_API_BASE_URL=https\?://' src/Web/admin-portal/.env >/dev/null || (echo "VITE_API_BASE_URL must be absolute http(s) URL"; exit 1)
+          done < src/Web/admin-portal/.env.production
+          grep '^VITE_API_BASE_URL=https\?://' src/Web/admin-portal/.env.production >/dev/null || (echo "VITE_API_BASE_URL must be absolute http(s) URL"; exit 1)
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1

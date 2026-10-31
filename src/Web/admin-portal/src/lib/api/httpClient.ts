@@ -39,15 +39,31 @@ const API_BASE = resolveApiBase(import.meta.env.VITE_API_BASE_URL);
 function resolveApiBase(configuredBase: string | undefined): string {
   const trimmed = configuredBase?.trim();
   if (!trimmed) {
+    console.warn('[api] VITE_API_BASE_URL is missing. Falling back to relative /api/v1', {
+      host: globalThis.location?.host,
+      origin: globalThis.location?.origin,
+      mode: import.meta.env.MODE,
+    });
     return '/api/v1';
   }
 
   const withoutTrailingSlash = trimmed.replace(/\/+$/, '');
   if (withoutTrailingSlash.startsWith('http://') || withoutTrailingSlash.startsWith('https://')) {
+    console.info('[api] Using absolute API base URL from VITE_API_BASE_URL', {
+      configured: trimmed,
+      resolved: withoutTrailingSlash,
+      mode: import.meta.env.MODE,
+    });
     return withoutTrailingSlash;
   }
 
-  return withoutTrailingSlash.startsWith('/') ? withoutTrailingSlash : `/${withoutTrailingSlash}`;
+  const normalized = withoutTrailingSlash.startsWith('/') ? withoutTrailingSlash : `/${withoutTrailingSlash}`;
+  console.info('[api] Using normalized relative API base URL from VITE_API_BASE_URL', {
+    configured: trimmed,
+    resolved: normalized,
+    mode: import.meta.env.MODE,
+  });
+  return normalized;
 }
 
 export function buildUrl(path: string, params?: QueryParams): string {
