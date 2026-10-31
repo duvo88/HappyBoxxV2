@@ -223,20 +223,32 @@ jobs:
             exit 1
           fi
 
+      - name: Restore identity project
+        run: dotnet restore src/Services/Identity/HappyBoxx.Identity.Api/HappyBoxx.Identity.Api.csproj
+
       - name: Apply identity migrations
         env:
           AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
         run: dotnet-ef database update --project src/Services/Identity/HappyBoxx.Identity.Api/HappyBoxx.Identity.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
+
+      - name: Restore catalog project
+        run: dotnet restore src/Services/Catalog/HappyBoxx.Catalog.Api/HappyBoxx.Catalog.Api.csproj
 
       - name: Apply catalog migrations
         env:
           AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
         run: dotnet-ef database update --project src/Services/Catalog/HappyBoxx.Catalog.Api/HappyBoxx.Catalog.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
 
+      - name: Restore inventory project
+        run: dotnet restore src/Services/Inventory/HappyBoxx.Inventory.Api/HappyBoxx.Inventory.Api.csproj
+
       - name: Apply inventory migrations
         env:
           AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
         run: dotnet-ef database update --project src/Services/Inventory/HappyBoxx.Inventory.Api/HappyBoxx.Inventory.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
+
+      - name: Restore billing project
+        run: dotnet restore src/Services/Billing/HappyBoxx.Billing.Api/HappyBoxx.Billing.Api.csproj
 
       - name: Apply billing migrations
         env:
