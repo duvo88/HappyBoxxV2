@@ -199,6 +199,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: deploy-gateway
     environment: production
+    env:
+      ASPNETCORE_ENVIRONMENT: Development
+      Email__Mode: Disabled
+      Email__PublicBaseUrl: http://localhost:5173/
+      AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+      ConnectionStrings__happyboxxdb: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -215,8 +221,6 @@ jobs:
         run: echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
 
       - name: Validate migration connection string
-        env:
-          AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
         run: |
           if [ -z "$AZURE_SQL_CONNECTION_STRING" ]; then
             echo "AZURE_SQL_CONNECTION_STRING is not set in the production environment secrets."
@@ -227,30 +231,22 @@ jobs:
         run: dotnet restore src/Services/Identity/HappyBoxx.Identity.Api/HappyBoxx.Identity.Api.csproj
 
       - name: Apply identity migrations
-        env:
-          AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
         run: dotnet-ef database update --project src/Services/Identity/HappyBoxx.Identity.Api/HappyBoxx.Identity.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
 
       - name: Restore catalog project
         run: dotnet restore src/Services/Catalog/HappyBoxx.Catalog.Api/HappyBoxx.Catalog.Api.csproj
 
       - name: Apply catalog migrations
-        env:
-          AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
         run: dotnet-ef database update --project src/Services/Catalog/HappyBoxx.Catalog.Api/HappyBoxx.Catalog.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
 
       - name: Restore inventory project
         run: dotnet restore src/Services/Inventory/HappyBoxx.Inventory.Api/HappyBoxx.Inventory.Api.csproj
 
       - name: Apply inventory migrations
-        env:
-          AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
         run: dotnet-ef database update --project src/Services/Inventory/HappyBoxx.Inventory.Api/HappyBoxx.Inventory.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
 
       - name: Restore billing project
         run: dotnet restore src/Services/Billing/HappyBoxx.Billing.Api/HappyBoxx.Billing.Api.csproj
 
       - name: Apply billing migrations
-        env:
-          AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
         run: dotnet-ef database update --project src/Services/Billing/HappyBoxx.Billing.Api/HappyBoxx.Billing.Api.csproj --connection "$AZURE_SQL_CONNECTION_STRING"
