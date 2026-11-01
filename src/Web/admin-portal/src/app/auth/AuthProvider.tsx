@@ -3,6 +3,7 @@ import { MsalProvider, useMsal } from '@azure/msal-react';
 import { Center, Loader } from '@mantine/core';
 import { useEffect, useEffectEvent, useMemo, useState, type ReactNode } from 'react';
 import { useUiLanguage } from '@/app/localization/UiLanguageContext';
+import { buildUrl } from '@/lib/api/httpClient';
 import { apiScope, msalInstance } from './authConfig';
 import { setApiAuthHeadersProvider } from './apiAuth';
 import {
@@ -135,7 +136,7 @@ function EntraAuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const response = await fetch('/api/v1/identity/access/current', {
+      const response = await fetch(buildUrl('/identity/access/current'), {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       if (!response.ok && import.meta.env.DEV) {
