@@ -2,6 +2,13 @@ using HappyBoxx.ServiceDefaults.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var appServicePort = Environment.GetEnvironmentVariable("PORT")
+    ?? Environment.GetEnvironmentVariable("WEBSITES_PORT");
+if (!string.IsNullOrWhiteSpace(appServicePort))
+{
+    builder.WebHost.UseUrls($"http://0.0.0.0:{appServicePort}");
+}
+
 builder.AddServiceDefaults();
 builder.Services.AddHappyBoxxAuthentication(builder.Configuration, builder.Environment);
 
