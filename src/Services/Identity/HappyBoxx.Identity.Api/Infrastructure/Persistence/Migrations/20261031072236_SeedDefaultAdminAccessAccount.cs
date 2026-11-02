@@ -8,7 +8,7 @@ namespace HappyBoxx.Identity.Api.Infrastructure.Persistence.Migrations
     public partial class SeedDefaultAdminAccessAccount : Migration
     {
         private const string AccountId = "01A1867A-6A9C-73C6-9EA7-9EE359C38A35";
-        private const string ExternalSubject = "1GgalvCP7ZudMybvmRmLJ3Ah-6I18FQeh7X3Ai1_aM";
+        private const string ExternalSubject = "1GgaIvCP7ZudMybvmRmLJ3Ah-6l18FQeh7X3AiI1_aM";
         private const string Email = "danielvo00.au@gmail.com";
         private const string NormalizedEmail = "DANIELVO00.AU@GMAIL.COM";
         private const string DisplayName = "Daniel Vo";
