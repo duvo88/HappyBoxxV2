@@ -37,7 +37,10 @@ function createMsalConfig(): Configuration {
   }
 
   const defaultRedirectUri = `${window.location.origin}/`;
-  const redirectUri = normalizeRedirectUri(import.meta.env.VITE_ENTRA_REDIRECT_URI, defaultRedirectUri);
+  const redirectUri = normalizeRedirectUri(
+    import.meta.env.VITE_ENTRA_REDIRECT_URI,
+    defaultRedirectUri,
+  );
   const postLogoutRedirectUri = normalizeRedirectUri(
     import.meta.env.VITE_ENTRA_POST_LOGOUT_REDIRECT_URI,
     redirectUri,
